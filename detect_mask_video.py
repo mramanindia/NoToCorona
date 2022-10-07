@@ -10,9 +10,9 @@ import cv2
 import os
 from playsound import playsound
 
+#Using trained model for face detection using opencv
 def detect_and_predict_mask(frame, faceNet, maskNet):
-	# grab the dimensions of the frame and then construct a blob
-	# from it
+	# grab the dimensions of the frame and then construct a blob from it
 	(h, w) = frame.shape[:2]
 	blob = cv2.dnn.blobFromImage(frame, 1.0, (224, 224),
 		(104.0, 177.0, 123.0))
@@ -91,8 +91,7 @@ while True:
 	frame = vs.read()
 	frame = imutils.resize(frame, width=400)
 
-	# detect faces in the frame and determine if they are wearing a
-	# face mask or not
+	# detect faces in the frame and determine if they are wearing a face mask or not
 	(locs, preds) = detect_and_predict_mask(frame, faceNet, maskNet)
 
 	# loop over the detected face locations and their corresponding
