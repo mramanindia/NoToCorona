@@ -20,8 +20,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import os
 
-# initialize the initial learning rate, number of epochs to train for,
-# and batch size
+# initialize the initial learning rate, number of epochs to train for,and batch size
 INIT_LR = 1e-4
 EPOCHS = 20
 BS = 32
@@ -35,6 +34,7 @@ print("[INFO] loading images...")
 
 data = []
 labels = []
+
 
 for category in CATEGORIES:
     path = os.path.join(DIRECTORY, category)
@@ -58,7 +58,7 @@ labels = np.array(labels)
 (trainX, testX, trainY, testY) = train_test_split(data, labels,
 	test_size=0.20, stratify=labels, random_state=42)
 
-# construct the training image generator for data augmentation
+# construct the training image generator for data augmentation as we have the limited data and thus for more images, we needed Image augmentation
 aug = ImageDataGenerator(
 	rotation_range=20,
 	zoom_range=0.15,
@@ -68,13 +68,11 @@ aug = ImageDataGenerator(
 	horizontal_flip=True,
 	fill_mode="nearest")
 
-# load the MobileNetV2 network, ensuring the head FC layer sets are
-# left off
+# load the MobileNetV2 network, ensuring the head FC layer sets are left off
 baseModel = MobileNetV2(weights="imagenet", include_top=False,
 	input_tensor=Input(shape=(224, 224, 3)))
 
-# construct the head of the model that will be placed on top of the
-# the base model
+# construct the head of the model that will be placed on top of the base model
 headModel = baseModel.output
 headModel = AveragePooling2D(pool_size=(7, 7))(headModel)
 headModel = Flatten(name="flatten")(headModel)
@@ -106,7 +104,7 @@ H = model.fit(
 	validation_steps=len(testX) // BS,
 	epochs=EPOCHS)
 
-# make predictions on the testing set
+# making predictions on the testing set
 print("[INFO] evaluating network...")
 predIdxs = model.predict(testX, batch_size=BS)
 
@@ -124,6 +122,7 @@ model.save("mask_detector.model", save_format="h5")
 
 # plot the training loss and accuracy
 N = EPOCHS
+
 plt.style.use("ggplot")
 plt.figure()
 plt.plot(np.arange(0, N), H.history["loss"], label="train_loss")
