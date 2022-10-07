@@ -11,8 +11,7 @@ import os
 from playsound import playsound
 
 def detect_and_predict_mask(frame, faceNet, maskNet):
-	# grab the dimensions of the frame and then construct a blob
-	# from it
+	# grab the dimensions of the frame and then construct a blob from it
 	(h, w) = frame.shape[:2]
 	blob = cv2.dnn.blobFromImage(frame, 1.0, (224, 224),
 		(104.0, 177.0, 123.0))
@@ -22,8 +21,7 @@ def detect_and_predict_mask(frame, faceNet, maskNet):
 	detections = faceNet.forward()
 	print(detections.shape)
 
-	# initialize our list of faces, their corresponding locations,
-	# and the list of predictions from our face mask network
+	# initialize our list of faces, their corresponding locations, and the list of predictions from our face mask network
 	faces = []
 	locs = []
 	preds = []
@@ -62,14 +60,11 @@ def detect_and_predict_mask(frame, faceNet, maskNet):
 
 	# only make a predictions if at least one face was detected
 	if len(faces) > 0:
-		# for faster inference we'll make batch predictions on *all*
-		# faces at the same time rather than one-by-one predictions
-		# in the above `for` loop
+		# for faster inference we'll make batch predictions on *all* faces at the same time rather than one-by-one predictions in the above `for` loop
 		faces = np.array(faces, dtype="float32")
 		preds = maskNet.predict(faces, batch_size=32)
 
-	# return a 2-tuple of the face locations and their corresponding
-	# locations
+	# return a 2-tuple of the face locations and their corresponding locations
 	return (locs, preds)
 
 # load our serialized face detector model from disk
